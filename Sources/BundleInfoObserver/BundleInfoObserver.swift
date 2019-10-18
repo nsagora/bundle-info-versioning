@@ -23,7 +23,7 @@ public class BundleInfoObserver {
     
     private func getBundleInfoValue<T>(for keyPath: String) -> T? {
        
-        guard let infoDic = bundle.infoDictionary else { preconditionFailure("Bundle is missing the info dictionary.") }
+        guard let infoDic = bundle.infoDictionary else { return nil }
         return infoDic.value(for: keyPath) as? T
     }
 }

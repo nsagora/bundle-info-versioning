@@ -17,7 +17,7 @@ extension Dictionary where Key == String {
             return self[firstKey]
         }
         
-        guard let underlyingDict = self[firstKey] as? Dictionary<Key, Value> else { preconditionFailure("Expecting an underlying dictionary for key '\(firstKey)'") }
+        guard let underlyingDict = self[firstKey] as? Dictionary<Key, Value> else { return nil }
         
         let newKeyPath = keyPath.dropFirst().joined(separator: "/")
         return underlyingDict.value(for: newKeyPath)

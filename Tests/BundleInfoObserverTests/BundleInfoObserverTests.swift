@@ -3,7 +3,6 @@ import XCTest
 
 final class BundleInfoObserverTests: XCTestCase {
     
-    
     func test_init_bundle() {
         
         //arrange
@@ -51,6 +50,41 @@ final class BundleInfoObserverTests: XCTestCase {
         
         //assert
         XCTAssertEqual(expected, "value")
+    }
+    
+    func test_observerChange_newValue_isNilWhenInfoDictionaryIsNil() {
+        
+        //arrange
+        let storage = FakeStorage()
+        let bundle = FakeBundle()
+        let sut = BundleInfoObserver(bundle: bundle, storage: storage)
+        
+        //act
+        var expected: String?
+        sut.observerChange(forKeyPath: "key") { (_, newValue) in
+            expected = newValue
+        }
+        
+        //assert
+        XCTAssertNil(expected)
+    }
+    
+    func test_observerChange_newValue_isNilWhenKeyIsNotAvailableInInfoDicstionary() {
+        
+        //arrange
+        let storage = FakeStorage()
+        let bundle = FakeBundle()
+        bundle.fakeInfoDictionary = ["key": "value"]
+        let sut = BundleInfoObserver(bundle: bundle, storage: storage)
+        
+        //act
+        var expected: String?
+        sut.observerChange(forKeyPath: "wrongKey") { (_, newValue) in
+            expected = newValue
+        }
+        
+        //assert
+        XCTAssertNil(expected)
     }
     
     func test_observerChange_oldValue_afterReceivingNewValue_isEqualToNewValue() {
@@ -104,8 +138,31 @@ final class BundleInfoObserverTests: XCTestCase {
         //Assert
         XCTAssertEqual(expected, "value")
     }
+    
+    func test_observerChange_newValue_isNilWhenPathIsWrong() {
+        
+        //arrange
+        let storage = FakeStorage()
+        let bundle = FakeBundle()
+        bundle.fakeInfoDictionary = ["key": ["path": "value"]]
+        let sut = BundleInfoObserver(bundle: bundle, storage: storage)
+        
+        //act
+        var expected: String?
+        sut.observerChange(forKeyPath: "key/wrongPath") { (_, newValue) in
+            expected = newValue
+        }
+        
+        //Assert
+        XCTAssertNil(expected)
+    }
 
     static var allTests = [
-        ("testExample", test_init_bundle),
+        ("test_init_bundle", test_init_bundle),
+        ("test_init_bundle", test_observerChange_oldValue_isNil),
+        ("test_init_bundle", test_observerChange_newValue_isReadFromInfoDictionary),
+        ("test_init_bundle", test_observerChange_oldValue_afterReceivingNewValue_isEqualToNewValue),
+        ("test_init_bundle", test_observerChange_oldValueisNotSavedTwiceafterReceivingNewValue_WhenEqualToNewValue),
+        ("test_init_bundle", test_observerChange_newValue_isReadFromEmbeddedInfoDictionary),
     ]
 }
