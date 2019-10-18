@@ -5,7 +5,12 @@ public class BundleInfoObserver {
     internal let bundle: Bundle
     internal let storage: Storage
 
-    public init(bundle: Bundle, storage: Storage = FileStorage()) {
+    public init(bundle: Bundle) {
+        self.bundle = bundle
+        self.storage = UserDefaultsStorage()
+    }
+    
+    public init(bundle: Bundle, storage: Storage) {
         self.bundle = bundle
         self.storage = storage
     }
