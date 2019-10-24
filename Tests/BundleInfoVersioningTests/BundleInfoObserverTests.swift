@@ -1,15 +1,15 @@
 import XCTest
-@testable import BundleInfoObserver
+@testable import BundleInfoVersioning
 
 final class BundleInfoObserverTests: XCTestCase {
     
-    func test_init_bundle() {
+    func test_init_withBundle() {
         
         //arrange
         let bundle = FakeBundle()
         
         //act
-        let sut = BundleInfoObserver(bundle: bundle)
+        let sut = BundleInfoVersioning(bundle: bundle)
         
         //assert
         XCTAssertEqual(sut.bundle, bundle)
@@ -22,11 +22,11 @@ final class BundleInfoObserverTests: XCTestCase {
         let bundle = FakeBundle()
         bundle.fakeInfoDictionary = ["key": "value"]
         
-        let sut = BundleInfoObserver(bundle: bundle, storage: storage)
+        let sut = BundleInfoVersioning(bundle: bundle, storage: storage)
         
         //act
         var expected: String?
-        sut.observerChange(forKeyPath: "keypath") { (oldValue: String?, _) in
+        sut.check(forKeyPath: "keypath") { (oldValue: String?, _) in
             expected = oldValue
         }
         
@@ -40,11 +40,11 @@ final class BundleInfoObserverTests: XCTestCase {
         let storage = FakeStorage()
         let bundle = FakeBundle()
         bundle.fakeInfoDictionary = ["key": "value"]
-        let sut = BundleInfoObserver(bundle: bundle, storage: storage)
+        let sut = BundleInfoVersioning(bundle: bundle, storage: storage)
         
         //act
         var expected: String?
-        sut.observerChange(forKeyPath: "key") { (_, newValue) in
+        sut.check(forKeyPath: "key") { (_, newValue) in
             expected = newValue
         }
         
@@ -57,11 +57,11 @@ final class BundleInfoObserverTests: XCTestCase {
         //arrange
         let storage = FakeStorage()
         let bundle = FakeBundle()
-        let sut = BundleInfoObserver(bundle: bundle, storage: storage)
+        let sut = BundleInfoVersioning(bundle: bundle, storage: storage)
         
         //act
         var expected: String?
-        sut.observerChange(forKeyPath: "key") { (_, newValue) in
+        sut.check(forKeyPath: "key") { (_, newValue) in
             expected = newValue
         }
         
@@ -75,11 +75,11 @@ final class BundleInfoObserverTests: XCTestCase {
         let storage = FakeStorage()
         let bundle = FakeBundle()
         bundle.fakeInfoDictionary = ["key": "value"]
-        let sut = BundleInfoObserver(bundle: bundle, storage: storage)
+        let sut = BundleInfoVersioning(bundle: bundle, storage: storage)
         
         //act
         var expected: String?
-        sut.observerChange(forKeyPath: "wrongKey") { (_, newValue) in
+        sut.check(forKeyPath: "wrongKey") { (_, newValue) in
             expected = newValue
         }
         
@@ -94,10 +94,10 @@ final class BundleInfoObserverTests: XCTestCase {
         let bundle = FakeBundle()
         bundle.fakeInfoDictionary = ["key": "value"]
         
-        let sut = BundleInfoObserver(bundle: bundle, storage: storage)
+        let sut = BundleInfoVersioning(bundle: bundle, storage: storage)
         
         //act
-        sut.observerChange(forKeyPath: "key") { (_: String?, _: String?) in }
+        sut.check(forKeyPath: "key") { (_: String?, _: String?) in }
         
         //assert
         XCTAssertEqual(storage.getValue(for: "key"), "value")
@@ -110,11 +110,11 @@ final class BundleInfoObserverTests: XCTestCase {
         let bundle = FakeBundle()
         bundle.fakeInfoDictionary = ["key": "value"]
         
-        let sut = BundleInfoObserver(bundle: bundle, storage: storage)
-        sut.observerChange(forKeyPath: "key") { (_: String?, _: String?) in }
+        let sut = BundleInfoVersioning(bundle: bundle, storage: storage)
+        sut.check(forKeyPath: "key") { (_: String?, _: String?) in }
         
         //act
-        sut.observerChange(forKeyPath: "key") { (_: String?, _: String?) in
+        sut.check(forKeyPath: "key") { (_: String?, _: String?) in
             
             //assert
             XCTFail()
@@ -127,11 +127,11 @@ final class BundleInfoObserverTests: XCTestCase {
         let storage = FakeStorage()
         let bundle = FakeBundle()
         bundle.fakeInfoDictionary = ["key": ["path": "value"]]
-        let sut = BundleInfoObserver(bundle: bundle, storage: storage)
+        let sut = BundleInfoVersioning(bundle: bundle, storage: storage)
         
         //act
         var expected: String?
-        sut.observerChange(forKeyPath: "key/path") { (_, newValue) in
+        sut.check(forKeyPath: "key/path") { (_, newValue) in
             expected = newValue
         }
         
@@ -145,11 +145,11 @@ final class BundleInfoObserverTests: XCTestCase {
         let storage = FakeStorage()
         let bundle = FakeBundle()
         bundle.fakeInfoDictionary = ["key": ["path": "value"]]
-        let sut = BundleInfoObserver(bundle: bundle, storage: storage)
+        let sut = BundleInfoVersioning(bundle: bundle, storage: storage)
         
         //act
         var expected: String?
-        sut.observerChange(forKeyPath: "key/wrongPath") { (_, newValue) in
+        sut.check(forKeyPath: "key/wrongPath") { (_, newValue) in
             expected = newValue
         }
         
@@ -158,11 +158,11 @@ final class BundleInfoObserverTests: XCTestCase {
     }
 
     static var allTests = [
-        ("test_init_bundle", test_init_bundle),
-        ("test_init_bundle", test_observerChange_oldValue_isNil),
-        ("test_init_bundle", test_observerChange_newValue_isReadFromInfoDictionary),
-        ("test_init_bundle", test_observerChange_oldValue_afterReceivingNewValue_isEqualToNewValue),
-        ("test_init_bundle", test_observerChange_oldValueisNotSavedTwiceafterReceivingNewValue_WhenEqualToNewValue),
-        ("test_init_bundle", test_observerChange_newValue_isReadFromEmbeddedInfoDictionary),
+        ("test_init_withBundle", test_init_withBundle),
+        ("test_observerChange_oldValue_isNil", test_observerChange_oldValue_isNil),
+        ("test_observerChange_newValue_isReadFromInfoDictionary", test_observerChange_newValue_isReadFromInfoDictionary),
+        ("test_observerChange_oldValue_afterReceivingNewValue_isEqualToNewValue", test_observerChange_oldValue_afterReceivingNewValue_isEqualToNewValue),
+        ("test_observerChange_oldValueisNotSavedTwiceafterReceivingNewValue_WhenEqualToNewValue", test_observerChange_oldValueisNotSavedTwiceafterReceivingNewValue_WhenEqualToNewValue),
+        ("test_observerChange_newValue_isReadFromEmbeddedInfoDictionary", test_observerChange_newValue_isReadFromEmbeddedInfoDictionary),
     ]
 }

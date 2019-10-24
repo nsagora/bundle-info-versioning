@@ -1,5 +1,5 @@
 import Foundation
-@testable import BundleInfoObserver
+@testable import BundleInfoVersioning
 
 class FakeStorage: Storage {
     
