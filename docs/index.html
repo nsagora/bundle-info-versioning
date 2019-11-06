@@ -48,14 +48,107 @@
         <section>
           <section class="section">
             
-            <h1 id='bundle-info-versioning' class='heading'>Bundle Info Versioning</h1>
+            <h1 id='bundle-info-versioning-a-href-https-github-com-nsagora-bundle-info-versioning-img-src-https-img-shields-io-badge-version-0-1-0-blue-svg-style-flat-alt-badge-version-a' class='heading'>Bundle Info Versioning <a href="https://github.com/nsagora/bundle-info-versioning"><img src="https://img.shields.io/badge/version-0.1.0-blue.svg?style=flat" alt="badge-version"></a></h1>
 
-<p>A description of this package.</p>
+<p><a href="https://nsagora.github.io/bundle-info-versioning/"><img src="https://img.shields.io/badge/docs-57%25-orange.svg?style=flat" alt="badge-docs"></a>
+<a href="https://swift.org/package-manager"><img src="https://img.shields.io/badge/swift%20pm-compatible-4BC51D.svg?style=flat" alt="badge-swift-pm"></a>
+<a href="http://choosealicense.com/licenses/mit/"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat" alt="badge-license"></a>
+<a href="https://twitter.com/nsagora"><img src="https://img.shields.io/badge/twitter-%40nsgaora-blue.svg?style=flat" alt="badge-twitter"></a></p>
+
+<ol>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#installation">Installation</a>
+
+<ul>
+<li><a href="#swift-package-manager">Swift Package Manager</a></li>
+<li><a href="#manually">Manually</a></li>
+</ul></li>
+<li><a href="#usage-examples">Usage Examples</a>
+
+<ul>
+<li><a href="#import">Import</a></li>
+<li><a href="#usage">Usage</a></li>
+</ul></li>
+<li><a href="#contribute">Contribute</a></li>
+<li><a href="#meta">Meta</a></li>
+</ol>
+<h2 id='introduction' class='heading'>Introduction</h2>
+
+<p><code>BundeInfoVersioning</code> is a tool that allows you to check for changes in your app&rsquo;s <code>Info.plist</code> file, when there is a new version of your app.</p>
+<h2 id='requirements' class='heading'>Requirements</h2>
+
+<ul>
+<li>iOS 8.0+ / macOS 10.10+ / tvOS 9.0+ / watchOS 2.0+</li>
+<li>Xcode 11.0+</li>
+<li>Swift 5.1+</li>
+</ul>
+<h2 id='installation' class='heading'>Installation</h2>
+<h3 id='swift-package-manager' class='heading'>Swift Package Manager</h3>
+
+<p>You can use the <a href="https://swift.org/package-manager">Swift Package Manager</a> to install <code>BundeInfoVersioning</code> by adding it to your <code>Package.swift</code> file:</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">PackageDescription</span>
+
+<span class="k">let</span> <span class="nv">package</span> <span class="o">=</span> <span class="kt">Package</span><span class="p">(</span>
+    <span class="nv">name</span><span class="p">:</span> <span class="s">"YOUR_PROJECT_NAME"</span><span class="p">,</span>
+    <span class="nv">targets</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="nv">dependencies</span><span class="p">:</span> <span class="p">[</span>
+        <span class="o">.</span><span class="kt">Package</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="s">"https://github.com/nsagora/bundle-info-versioning"</span><span class="p">,</span> <span class="nv">majorVersion</span><span class="p">:</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+</code></pre>
+<h3 id='manually' class='heading'>Manually</h3>
+
+<p>To manually add this library in your project, just drag the <code>Sources</code> folder into the project tree.</p>
+<h2 id='usage-examples' class='heading'>Usage examples</h2>
+<h3 id='import' class='heading'>Import</h3>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">BundleInfoVersioning</span>
+
+<span class="c1">/// ...</span>
+</code></pre>
+<h3 id='usage' class='heading'>Usage</h3>
+
+<p>The <code><a href="Classes/BundleInfoVersioning.html">BundleInfoVersioning</a></code> represents the core <code>class</code>.</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">bundleInfoVersioning</span> <span class="o">=</span> <span class="kt">BundleInfoVersioning</span><span class="p">()</span>
+
+<span class="c1">/// ....</span>
+</code></pre>
+
+<details>
+<summary>Specify bundle</summary>
+
+&ldquo;`swift
+let bundleInfoVersioning = BundleInfoVersioning(bundle: .main)
+
+/// &hellip;.
+&rdquo;`
+</details>
+
+<details>
+<summary>Add custom storage</summary>
+
+&ldquo;`swift
+let storage: BundleInfoVersioning.Storage = &hellip;.
+let bundleInfoVersioning = BundleInfoVersioning(bundle: .main, storage: storage)
+
+/// &hellip;.
+&rdquo;`
+</details>
+<h2 id='contribute' class='heading'>Contribute</h2>
+
+<p>We would love you for the contribution to <strong>BundleInfoVersioning</strong>, check the <a href="https://github.com/nsagora/bundle-info-versioning/blob/develop/LICENSE"><code>LICENSE</code></a> file for more info.</p>
+<h2 id='meta' class='heading'>Meta</h2>
+
+<p>This project is developed and maintained by the members of <a href="https://twitter.com/nsagora">iOS NSAgora</a>, the community of iOS Developers of Iași, Romania.</p>
+
+<p>Distributed under the <a href="http://choosealicense.com/licenses/mit/">MIT</a> license. See <a href="https://github.com/nsagora/bundle-info-versioning/blob/develop/LICENSE"><code>LICENSE</code></a> for more information.</p>
+
+<p>[<a href="https://github.com/nsagora/bundle-info-versioning">https://github.com/nsagora/bundle-info-versioning</a>]</p>
 
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-10-24)</p>
+          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-11-06)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.11.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
