@@ -18,7 +18,7 @@
 
 ## Introduction
 
-`BundeInfoVersioning` is a lightweight framework that allows you to observe changes in the `Info.plist` file when there is an app update.
+`BundeInfoVersioning` is a lightweight package that allows you to observe changes in the `Info.plist` file when there is an app update.
 
 ## Requirements
 
