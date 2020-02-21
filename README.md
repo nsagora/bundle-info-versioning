@@ -50,7 +50,7 @@ To manually add this library in your project, just drag the `Sources` folder int
 
 ## Usage examples
 
-Check for `CFBundleShortVersionString` updates and show a __What's new__ like screen each time the user updates the app:
+Check for `CFBundleShortVersionString` updates and show a _What's new_ like screen each time the user updates the app:
 
 ``` swift
 import BundleInfoVersioning
@@ -106,7 +106,12 @@ import BundleInfoVersioning
 
 let bundleInfoVersioning = BundleInfoVersioning(bundle: .main)
 bundleInfoVersioning.check(forKeyPath: "CFBundleVersion") { (old: String?, new: String?) in
-    // ...
+    if old == nil {
+        Analytics.install(version: new)
+    }
+    else {
+        Analytics.update(from: old, to: new)
+    }
 }
 ```
 </details>
@@ -136,7 +141,7 @@ let storage = MyStorage()
 let bundleInfoVersioning = BundleInfoVersioning(bundle: .main, storage: storage)
 
 bundleInfoVersioning.check(forKeyPath: "NSAgora/DatabaseVersion") { (old: Int?, new: Int?) in
-    // ...
+     self.migrateDataBase()
 }
 ```
 </details>
@@ -178,4 +183,4 @@ Distributed under the [MIT][url-license] license. See [``LICENSE``][url-license-
 [badge-swift-pm]: https://img.shields.io/badge/swift%20pm-compatible-4BC51D.svg?style=flat
 [badge-carthage]: https://img.shields.io/badge/carthage-compatible-4BC51D.svg?style=flat
 [badge-version]: https://img.shields.io/badge/version-0.1.0-blue.svg?style=flat
-[badge-docs]: https://img.shields.io/badge/docs-57%25-orange.svg?style=flat
+[badge-docs]: https://img.shields.io/badge/docs-100%25-green.svg?style=flat

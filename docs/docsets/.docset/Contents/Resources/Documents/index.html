@@ -13,7 +13,7 @@
     <a title="  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html"> Docs</a> (57% documented)</p>
+        <p><a href="index.html"> Docs</a> (100% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -75,7 +75,7 @@
 </ol>
 <h2 id='introduction' class='heading'>Introduction</h2>
 
-<p><code>BundeInfoVersioning</code> is a tool that allows you to check for changes in your app&rsquo;s <code>Info.plist</code> file, when there is a new version of your app.</p>
+<p><code>BundeInfoVersioning</code> is a lightweight package that allows you to observe changes in the <code>Info.plist</code> file when there is an app update.</p>
 <h2 id='requirements' class='heading'>Requirements</h2>
 
 <ul>
@@ -101,38 +101,94 @@
 
 <p>To manually add this library in your project, just drag the <code>Sources</code> folder into the project tree.</p>
 <h2 id='usage-examples' class='heading'>Usage examples</h2>
-<h3 id='import' class='heading'>Import</h3>
+
+<p>Check for <code>CFBundleShortVersionString</code> updates and show a <em>What&rsquo;s new</em> like screen each time the user updates the app:</p>
 <pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">BundleInfoVersioning</span>
 
-<span class="c1">/// ...</span>
-</code></pre>
-<h3 id='usage' class='heading'>Usage</h3>
+<span class="k">let</span> <span class="nv">bundleInfoVersioning</span> <span class="o">=</span> <span class="kt">BundleInfoVersioning</span><span class="p">()</span>
 
-<p>The <code><a href="Classes/BundleInfoVersioning.html">BundleInfoVersioning</a></code> represents the core <code>class</code>.</p>
-<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">bundleInfoVersioning</span> <span class="o">=</span> <span class="kt">BundleInfoVersioning</span><span class="p">()</span>
+<span class="n">bundleInfoVersioning</span><span class="o">.</span><span class="nf">check</span><span class="p">(</span><span class="nv">forKeyPath</span><span class="p">:</span> <span class="s">"CFBundleShortVersionString"</span><span class="p">)</span> <span class="p">{</span> <span class="n">_</span> <span class="p">,</span> <span class="n">newVersion</span> <span class="k">in</span>
+    <span class="k">self</span><span class="o">.</span><span class="nf">showWhatsNew</span><span class="p">(</span><span class="nv">in</span><span class="p">:</span> <span class="n">newVersion</span><span class="p">)</span>
+<span class="p">}</span>   
 
-<span class="c1">/// ....</span>
 </code></pre>
+
+<p>Check for <code>CFBundleVersion</code> updates and track in the analytics when the app is installed or updated:</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">BundleInfoVersioning</span>
+
+<span class="k">let</span> <span class="nv">bundleInfoVersioning</span> <span class="o">=</span> <span class="kt">BundleInfoVersioning</span><span class="p">(</span><span class="nv">bundle</span><span class="p">:</span> <span class="o">.</span><span class="n">main</span><span class="p">)</span>
+
+<span class="n">bundleInfoVersioning</span><span class="o">.</span><span class="nf">check</span><span class="p">(</span><span class="nv">forKeyPath</span><span class="p">:</span> <span class="s">"CFBundleVersion"</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="nv">old</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">new</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span> <span class="k">in</span>
+    <span class="k">if</span> <span class="n">old</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="kt">Analytics</span><span class="o">.</span><span class="nf">install</span><span class="p">(</span><span class="nv">version</span><span class="p">:</span> <span class="k">new</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="kt">Analytics</span><span class="o">.</span><span class="nf">update</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="n">old</span><span class="p">,</span> <span class="nv">to</span><span class="p">:</span> <span class="k">new</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>Check for a custom key path (e.g. <code>NSAgora/DatabaseVersion</code>) updates and execute the migration code for the data base.</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">BundleInfoVersioning</span>
+
+<span class="k">let</span> <span class="nv">bundleInfoVersioning</span> <span class="o">=</span> <span class="kt">BundleInfoVersioning</span><span class="p">()</span>
+
+<span class="n">bundleInfoVersioning</span><span class="o">.</span><span class="nf">check</span><span class="p">(</span><span class="nv">forKeyPath</span><span class="p">:</span> <span class="s">"NSAgora/DatabaseVersion"</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="nv">old</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?,</span> <span class="nv">new</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?)</span> <span class="k">in</span>
+    <span class="k">self</span><span class="o">.</span><span class="nf">migrateDataBase</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre>
+<h3 id='advanced-usage' class='heading'>Advanced usage</h3>
+
+<p>The <code>BundeInfoVersioning</code> class allows to specify the <code>Bundle</code> on which will be observing the <code>Info.plist</code> changes.</p>
+
+<p>By default it is initialized with the <code>.main</code> bundle.</p>
 
 <details>
 <summary>Specify bundle</summary>
 
 &ldquo;`swift
-let bundleInfoVersioning = BundleInfoVersioning(bundle: .main)
+import BundleInfoVersioning
 
-/// &hellip;.
-&rdquo;`
+let bundleInfoVersioning = BundleInfoVersioning(bundle: .main)
+bundleInfoVersioning.check(forKeyPath: &quot;CFBundleVersion&rdquo;) { (old: String?, new: String?) in
+    if old == nil {
+        Analytics.install(version: new)
+    }
+    else {
+        Analytics.update(from: old, to: new)
+    }
+}
+&ldquo;`
 </details>
 
-<details>
-<summary>Add custom storage</summary>
+<p>The <code>BundeInfoVersioning</code> framework comes with a build-in storage system, implemented on top of <code>UserDefaults</code>.</p>
 
-&ldquo;`swift
-let storage: BundleInfoVersioning.Storage = &hellip;.
+<p>However, if it doesn&rsquo;t fit the apps needs, you can implement a custom storage by conforming to the <code><a href="Protocols/Storage.html">Storage</a></code> protocol.</p>
+
+<details>
+
+<summary>Custom storage</summary>
+
+&rdquo;`swift
+import BundleInfoVersioning
+
+class MyStorage: Storage {
+    func set<T>(value: T?, for key: String) {
+        UserDefaults.standard.set(value, forKey: key)
+    }
+    
+    func getValue<T>(for key: String) -> T? {
+        return UserDefaults.standard.value(forKey: key) as? T
+    }
+}
+
+let storage = MyStorage()
 let bundleInfoVersioning = BundleInfoVersioning(bundle: .main, storage: storage)
 
-/// &hellip;.
-&rdquo;`
+bundleInfoVersioning.check(forKeyPath: &ldquo;NSAgora/DatabaseVersion&rdquo;) { (old: Int?, new: Int?) in
+     self.migrateDataBase()
+}
+&ldquo;`
 </details>
 <h2 id='contribute' class='heading'>Contribute</h2>
 
@@ -148,7 +204,7 @@ let bundleInfoVersioning = BundleInfoVersioning(bundle: .main, storage: storage)
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-11-06)</p>
+          <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2020-02-21)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.11.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

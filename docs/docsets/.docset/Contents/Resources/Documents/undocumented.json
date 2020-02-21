@@ -1,26 +1,6 @@
 {
   "warnings": [
-    {
-      "file": "/Users/alex/Developer/opensource/bundle-info-versioning/Sources/BundleInfoVersioning/Storage/Storage.swift",
-      "line": 3,
-      "symbol": "Storage",
-      "symbol_kind": "source.lang.swift.decl.protocol",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/alex/Developer/opensource/bundle-info-versioning/Sources/BundleInfoVersioning/Storage/Storage.swift",
-      "line": 5,
-      "symbol": "Storage.set(value:for:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/alex/Developer/opensource/bundle-info-versioning/Sources/BundleInfoVersioning/Storage/Storage.swift",
-      "line": 6,
-      "symbol": "Storage.getValue(for:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    }
+
   ],
   "source_directory": "/Users/alex/Developer/opensource/bundle-info-versioning"
 }

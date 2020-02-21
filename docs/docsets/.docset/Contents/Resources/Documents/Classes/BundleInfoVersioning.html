@@ -14,7 +14,7 @@
     <a title="BundleInfoVersioning Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (57% documented)</p>
+        <p><a href="../index.html"> Docs</a> (100% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -55,7 +55,18 @@
 
                 </div>
               </div>
-            <p><code>BundleInfoVersioning</code> checks at runtime if, for a given keypath, there have been changes in the <code>info.plist</code>file from the associated <code>Bundle</code>.</p>
+            <p><code>BundleInfoVersioning</code> checks at runtime if, for a given keypath, there have been changes in the <code>info.plist</code> file from the associated <code>Bundle</code>.</p>
+
+<p>Check for <code>CFBundleShortVersionString</code> updates and show a <em>What&rsquo;s new</em> like screen each time the user updates the app:</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">BundleInfoVersioning</span>
+
+<span class="k">let</span> <span class="nv">bundleInfoVersioning</span> <span class="o">=</span> <span class="kt">BundleInfoVersioning</span><span class="p">()</span>
+
+<span class="n">bundleInfoVersioning</span><span class="o">.</span><span class="nf">check</span><span class="p">(</span><span class="nv">forKeyPath</span><span class="p">:</span> <span class="s">"CFBundleShortVersionString"</span><span class="p">)</span> <span class="p">{</span> <span class="n">_</span> <span class="p">,</span> <span class="n">newVersion</span> <span class="k">in</span>
+    <span class="k">self</span><span class="o">.</span><span class="nf">showWhatsNew</span><span class="p">(</span><span class="nv">in</span><span class="p">:</span> <span class="n">newVersion</span><span class="p">)</span>
+<span class="p">}</span>
+
+</code></pre>
 
           </section>
           <section class="section task-group-section">
@@ -74,7 +85,17 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Creates a new <code>BundleInfoVersioning</code> instance for a given <code>Bundle</code> object.</p>
+                        <p>Creates and returns a new <code>BundleInfoVersioning</code> instance for a given <code>Bundle</code> object.</p>
+
+<p>Check for <code>CFBundleShortVersionString</code> updates and show a <em>What&rsquo;s new</em> like screen each time the user updates the app:</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">BundleInfoVersioning</span>
+
+<span class="k">let</span> <span class="nv">bundleInfoVersioning</span> <span class="o">=</span> <span class="kt">BundleInfoVersioning</span><span class="p">()</span>
+
+<span class="n">bundleInfoVersioning</span><span class="o">.</span><span class="nf">check</span><span class="p">(</span><span class="nv">forKeyPath</span><span class="p">:</span> <span class="s">"CFBundleShortVersionString"</span><span class="p">)</span> <span class="p">{</span> <span class="n">_</span> <span class="p">,</span> <span class="n">newVersion</span> <span class="k">in</span>
+    <span class="k">self</span><span class="o">.</span><span class="nf">showWhatsNew</span><span class="p">(</span><span class="nv">in</span><span class="p">:</span> <span class="n">newVersion</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -97,7 +118,7 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>A <code>Bundle</code> object associated with your app or target. If you don&rsquo;t provide a bunlde, <code>Bundle.main</code> it will be used.</p>
+                                  <p>A <code>Bundle</code> object associated with your app or target. If you don&rsquo;t provide a bundle, then the <code>Bundle.main</code> it will be used by default.</p>
                                 </div>
                               </td>
                             </tr>
@@ -120,7 +141,30 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Creates a new <code>BundleInfoVersioning</code> instance for a given <code>Bundle</code> object and a custom <code><a href="../Protocols/Storage.html">Storage</a></code> implementation.</p>
+                        <p>Creates and returns a new <code>BundleInfoVersioning</code> instance for a given <code>Bundle</code> object and a custom <code><a href="../Protocols/Storage.html">Storage</a></code> implementation.</p>
+
+<p>The <code>BundeInfoVersioning</code> framework comes with a build-in storage system, implemented on top of <code>UserDefaults</code>.</p>
+
+<p>However, if this doesn&rsquo;t fit the apps needs, you can implement a custom key-value storage by conforming to the <code><a href="../Protocols/Storage.html">Storage</a></code> protocol.</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">BundleInfoVersioning</span>
+
+<span class="kd">class</span> <span class="kt">MyStorage</span><span class="p">:</span> <span class="kt">Storage</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="k">set</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="kt">T</span><span class="p">?,</span> <span class="k">for</span> <span class="nv">key</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">UserDefaults</span><span class="o">.</span><span class="n">standard</span><span class="o">.</span><span class="nf">set</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="n">key</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="n">getValue</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="k">for</span> <span class="nv">key</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kt">UserDefaults</span><span class="o">.</span><span class="n">standard</span><span class="o">.</span><span class="nf">value</span><span class="p">(</span><span class="nv">forKey</span><span class="p">:</span> <span class="n">key</span><span class="p">)</span> <span class="k">as?</span> <span class="kt">T</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">let</span> <span class="nv">storage</span> <span class="o">=</span> <span class="kt">MyStorage</span><span class="p">()</span>
+<span class="k">let</span> <span class="nv">bundleInfoVersioning</span> <span class="o">=</span> <span class="kt">BundleInfoVersioning</span><span class="p">(</span><span class="nv">bundle</span><span class="p">:</span> <span class="o">.</span><span class="n">main</span><span class="p">,</span> <span class="nv">storage</span><span class="p">:</span> <span class="n">storage</span><span class="p">)</span>
+
+<span class="n">bundleInfoVersioning</span><span class="o">.</span><span class="nf">check</span><span class="p">(</span><span class="nv">forKeyPath</span><span class="p">:</span> <span class="s">"NSAgora/DatabaseVersion"</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="nv">old</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?,</span> <span class="nv">new</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?)</span> <span class="k">in</span>
+    <span class="k">self</span><span class="o">.</span><span class="nf">migrateDataBase</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -180,7 +224,25 @@
                       <div class="abstract">
                         <p>Checks for changes in your app or target <code>info.plist</code> file.</p>
 
-<p>The <code>callback</code> will not be called if the provided <code>Bundle</code> object  doesn&rsquo;t have an associated <code>info.plist</code> file. Also, the  <code>callback</code> will not be called if the provied key path is not valid.</p>
+<p>Check for <code>CFBundleVersion</code> updates and track in the analytics when the app is installed or updated:</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">BundleInfoVersioning</span>
+
+<span class="k">let</span> <span class="nv">bundleInfoVersioning</span> <span class="o">=</span> <span class="kt">BundleInfoVersioning</span><span class="p">(</span><span class="nv">bundle</span><span class="p">:</span> <span class="o">.</span><span class="n">main</span><span class="p">)</span>
+
+<span class="n">bundleInfoVersioning</span><span class="o">.</span><span class="nf">check</span><span class="p">(</span><span class="nv">forKeyPath</span><span class="p">:</span> <span class="s">"CFBundleVersion"</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="nv">old</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">new</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span> <span class="k">in</span>
+   <span class="k">if</span> <span class="n">old</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+       <span class="kt">Analytics</span><span class="o">.</span><span class="nf">install</span><span class="p">(</span><span class="nv">version</span><span class="p">:</span> <span class="k">new</span><span class="p">)</span>
+   <span class="p">}</span>
+   <span class="k">else</span> <span class="p">{</span>
+       <span class="kt">Analytics</span><span class="o">.</span><span class="nf">update</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="n">old</span><span class="p">,</span> <span class="nv">to</span><span class="p">:</span> <span class="k">new</span><span class="p">)</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    The <code>callback</code> will not be called if the provided <code>Bundle</code> object  doesn&rsquo;t have an associated <code>info.plist</code> file. Also, the  <code>callback</code> will not be called if the provied key path is not valid.
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -215,7 +277,7 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The <code>callback</code> closure that is called with the <code>storedValues</code> and the <code>currentValue</code> for the given key path. The <code>callback</code> is called only if the <code>storedValue</code> and <code>currentValue</code> are different.</p>
+                                  <p>The <code>callback</code> closure that is called with the <code>storedValues</code> and the <code>currentValue</code> for the given key path. The <code>callback</code> is called when the <code>storedValue</code> and <code>currentValue</code> are different.</p>
                                 </div>
                               </td>
                             </tr>
@@ -227,7 +289,7 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The previous stored value for a given key path. First time this will be <code>nil</code>.</p>
+                                  <p>The stored value for a given key path. First time this will be <code>nil</code>.</p>
                                 </div>
                               </td>
                             </tr>
@@ -239,7 +301,7 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The current values available in the <code>info.plist</code> file for the given key path.</p>
+                                  <p>The current value from the <code>info.plist</code> file for the given key path.</p>
                                 </div>
                               </td>
                             </tr>
@@ -254,7 +316,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2019-11-06)</p>
+          <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2020-02-21)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.11.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
