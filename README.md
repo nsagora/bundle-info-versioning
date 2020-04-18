@@ -18,7 +18,7 @@
 
 ## Introduction
 
-`BundeInfoVersioning` is a tool that allows you to check for changes in your app's `Info.plist` file, when there is a new version of your app.
+`BundeInfoVersioning` is a lightweight package that allows you to observe changes in the `Info.plist` file when there is an app update.
 
 ## Requirements
 
@@ -50,42 +50,99 @@ To manually add this library in your project, just drag the `Sources` folder int
 
 ## Usage examples
 
-### Import
+Check for `CFBundleShortVersionString` updates and show a _What's new_ like screen each time the user updates the app:
 
 ``` swift
 import BundleInfoVersioning
 
-/// ...
-```
-
-### Usage 
-
-The `BundleInfoVersioning` represents the core `class`.
-
-```swift
 let bundleInfoVersioning = BundleInfoVersioning()
 
-/// ....
+bundleInfoVersioning.check(forKeyPath: "CFBundleShortVersionString") { _ , newVersion in
+    self.showWhatsNew(in: newVersion)
+}   
+
 ```
+
+Check for `CFBundleVersion` updates and track in the analytics when the app is installed or updated:
+
+``` swift
+import BundleInfoVersioning
+
+let bundleInfoVersioning = BundleInfoVersioning(bundle: .main)
+
+bundleInfoVersioning.check(forKeyPath: "CFBundleVersion") { (old: String?, new: String?) in
+    if old == nil {
+        Analytics.install(version: new)
+    }
+    else {
+        Analytics.update(from: old, to: new)
+    }
+}
+```
+
+Check for a custom key path (e.g. `NSAgora/DatabaseVersion`) updates and execute the migration code for the data base.
+
+``` swift
+import BundleInfoVersioning
+
+let bundleInfoVersioning = BundleInfoVersioning()
+
+bundleInfoVersioning.check(forKeyPath: "NSAgora/DatabaseVersion") { (old: Int?, new: Int?) in
+    self.migrateDataBase()
+}
+```
+
+### Advanced usage 
+
+The `BundeInfoVersioning` class allows to specify the `Bundle` on which will be observing the `Info.plist` changes.
+
+By default it is initialized with the `.main` bundle.
 
 <details>
 <summary>Specify bundle</summary>
 
 ```swift
-let bundleInfoVersioning = BundleInfoVersioning(bundle: .main)
+import BundleInfoVersioning
 
-/// ....
+let bundleInfoVersioning = BundleInfoVersioning(bundle: .main)
+bundleInfoVersioning.check(forKeyPath: "CFBundleVersion") { (old: String?, new: String?) in
+    if old == nil {
+        Analytics.install(version: new)
+    }
+    else {
+        Analytics.update(from: old, to: new)
+    }
+}
 ```
 </details>
 
+The `BundeInfoVersioning` framework comes with a build-in storage system, implemented on top of `UserDefaults`.
+
+However, if it doesn't fit the apps needs, you can implement a custom storage by conforming to the `Storage` protocol.
+
 <details>
-<summary>Add custom storage</summary>
+
+<summary>Custom storage</summary>
 
 ```swift
-let storage: BundleInfoVersioning.Storage = ....
+import BundleInfoVersioning
+
+class MyStorage: Storage {
+    func set<T>(value: T?, for key: String) {
+        UserDefaults.standard.set(value, forKey: key)
+    }
+    
+    func getValue<T>(for key: String) -> T? {
+        return UserDefaults.standard.value(forKey: key) as? T
+    }
+}
+
+let storage = MyStorage()
 let bundleInfoVersioning = BundleInfoVersioning(bundle: .main, storage: storage)
 
-/// ....
+bundleInfoVersioning.check(forKeyPath: "NSAgora/DatabaseVersion") { (old: Int?, new: Int?) in
+     self.migrateDataBase()
+}
 ```
 </details>
 
@@ -126,4 +183,4 @@ Distributed under the [MIT][url-license] license. See [``LICENSE``][url-license-
 [badge-swift-pm]: https://img.shields.io/badge/swift%20pm-compatible-4BC51D.svg?style=flat
 [badge-carthage]: https://img.shields.io/badge/carthage-compatible-4BC51D.svg?style=flat
 [badge-version]: https://img.shields.io/badge/version-0.1.0-blue.svg?style=flat
-[badge-docs]: https://img.shields.io/badge/docs-57%25-orange.svg?style=flat
+[badge-docs]: https://img.shields.io/badge/docs-100%25-green.svg?style=flat
