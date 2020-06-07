@@ -57,9 +57,9 @@ import BundleInfoVersioning
 
 let bundleInfoVersioning = BundleInfoVersioning()
 
-bundleInfoVersioning.check(forKeyPath: "CFBundleShortVersionString") { _ , newVersion in
+bundleInfoVersioning.check(forKeyPath: "CFBundleShortVersionString") { (_ , newVersion: String?) in
     self.showWhatsNew(in: newVersion)
-}   
+}
 
 ```
 
@@ -87,7 +87,7 @@ import BundleInfoVersioning
 
 let bundleInfoVersioning = BundleInfoVersioning()
 
-bundleInfoVersioning.check(forKeyPath: "NSAgora/DatabaseVersion") { (old: Int?, new: Int?) in
+bundleInfoVersioning.check(forKeyPath: "NSAgora/DatabaseVersion") { (_: Int?, _: Int?) in
     self.migrateDataBase()
 }
 ```
