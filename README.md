@@ -32,7 +32,7 @@
 
 You can use the [Swift Package Manager][url-swift-pm] to install `BundeInfoVersioning` by adding it to your `Package.swift` file:
 
-```swift
+``` swift
 import PackageDescription
 
 let package = Package(
@@ -101,7 +101,7 @@ By default it is initialized with the `.main` bundle.
 <details>
 <summary>Specify bundle</summary>
 
-```swift
+``` swift
 import BundleInfoVersioning
 
 let bundleInfoVersioning = BundleInfoVersioning(bundle: .main)
@@ -124,7 +124,7 @@ However, if it doesn't fit the apps needs, you can implement a custom storage by
 
 <summary>Custom storage</summary>
 
-```swift
+``` swift
 import BundleInfoVersioning
 
 class MyStorage: Storage {
