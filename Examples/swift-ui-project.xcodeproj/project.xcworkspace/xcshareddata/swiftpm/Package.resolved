@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "BundleInfoVersioning",
+        "repositoryURL": "https://github.com/nsagora/bundle-info-versioning/",
+        "state": {
+          "branch": null,
+          "revision": "89e41909d40f2609e8afba2b006051eccf01cbfe",
+          "version": "0.1.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

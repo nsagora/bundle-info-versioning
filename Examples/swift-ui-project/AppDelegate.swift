@@ -9,6 +9,31 @@
 import UIKit
 import BundleInfoVersioning
 
+struct Util {
+    
+    static func showWhatsNew(in version: String?) {
+        guard let version = version else { return }
+        print("You've updated the app to version \(version). Checkout what's new ...")
+    }
+    
+    static func migrateDatabase() {
+        print("New database version detected. Database migration in progress.")
+    }
+}
+
+struct Analytics {
+    static func install(version: String?) {
+        guard let version = version else { return }
+        print("You've installed the bundle verion \(version).")
+    }
+    
+    static func update(from: String?, to: String?) {
+        guard let from = from else { return }
+        guard let to = to else { return }
+        print("You've updated from bundle verion \(from) to bundle verion \(to).")
+    }
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -17,15 +42,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         bundleInfoVersioning.check(forKeyPath: "CFBundleShortVersionString") { (_ , newVersion: String?) in
-            self.showWhatsNew(in: newVersion)
+            Util.showWhatsNew(in: newVersion)
+        }
+        
+        bundleInfoVersioning.check(forKeyPath: "CFBundleVersion") { (old: String?, new: String?) in
+            if old == nil {
+                Analytics.install(version: new)
+            }
+            else {
+                Analytics.update(from: old, to: new)
+            }
+        }
+        
+        bundleInfoVersioning.check(forKeyPath: "NSAgora/DatabaseVersion") { (_: Int?, _: Int?) in
+            Util.migrateDatabase()
         }
         
         return true
-    }
-    
-    private func showWhatsNew(in version: String?) {
-        guard let version = version else { return }
-        print("You've open the new \(version) verion of the app. This message will be shown only once for each new version of the app.")
     }
 
     // MARK: UISceneSession Lifecycle
