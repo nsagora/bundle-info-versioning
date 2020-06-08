@@ -10,7 +10,7 @@ import Foundation
 
  let bundleInfoVersioning = BundleInfoVersioning()
 
- bundleInfoVersioning.check(forKeyPath: "CFBundleShortVersionString") { _ , newVersion in
+ bundleInfoVersioning.check(forKeyPath: "CFBundleShortVersionString") { (_ , newVersion: String?) in
      self.showWhatsNew(in: newVersion)
  }
 
@@ -33,7 +33,7 @@ public class BundleInfoVersioning {
 
      let bundleInfoVersioning = BundleInfoVersioning()
 
-     bundleInfoVersioning.check(forKeyPath: "CFBundleShortVersionString") { _ , newVersion in
+     bundleInfoVersioning.check(forKeyPath: "CFBundleShortVersionString") { (_ , newVersion: String?) in
          self.showWhatsNew(in: newVersion)
      }
     */
